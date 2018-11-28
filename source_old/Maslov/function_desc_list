@@ -1,22 +1,18 @@
-char* nameCreate() 
+char* nameCreate(char fileSymbol /*captcha[i]*/) +
 {
- /*Берет название.bmp из конфига */
+ /* Создание названия картинки */
  
  char fileName[6];
- char fileSymbol;
  
  file_name[5]='\0';
  
- printf("Enter the symbol:");
-	scanf("%c",fileSymbol);
- 
  file_name[0]=fileSymbol;
-	strcat(fileName,".bmp");
+ strcat(fileName,".bmp");
  
  return fileName;
 }
 
-file *openFile (char *fileName, char *openAction) 
+file *openFile (char *fileName, char *openAction) + (скорее всего не нужна)
 {
     /* Функция принимает строку, содержащую имя файла и строку наименования действия, производимого над файлом(чтение/запись);
     Создает указатель на файл;
@@ -25,40 +21,50 @@ file *openFile (char *fileName, char *openAction)
 
     file *inputFile = fopen(fileName, openAction);
 
-    return inputFile;
+    return inputFile; /*FILE * file_input[10];*/
  }
  
-void fileRead(bmp* bmpImage, file* inputeFile)  /*проверить*/
+bmp fileRead(file* inputeFile)  +
 {
-  /* Принимает структуру бмп и указатель на файл */
   /* Чтение "хедера" бмп */
   
-  fread(&bmpImage[i]->type, 2, 1, inputeFile);
-		fread(&bmpImage[i]->size, 4, 1,inputeFile);
-		fread(&bmpImage[i]->reserved, 4, 1, finputeFile);
-		fread(&bmpImage[i]->head_end, 4, 1, inputeFile);
-		fread(&bmpImage[i]->header_size, 4, 1, inputeFile);
-		fread(&bmpImage[i]->weight, 4, 1, inputeFile);
-		fread(&bmpImage[i]->height, 4, 1, inputeFile);
-		fread(&bmpImage[i]->end, 4, 7, inputeFile);
+  struct bmp bmpImage;
+  
+  		fread(bmpImage.type, 2, 1, inputeFile);
+		fread(&bmpImage.size, 4, 1,inputeFile);
+		fread(&bmpImage.reserved, 4, 1, finputeFile);
+		fread(&bmpImage.head_end, 4, 1, inputeFile);
+		fread(&bmpImage.header_size, 4, 1, inputeFile);
+		fread(&bmpImage.weight, 4, 1, inputeFile);
+		fread(&bmpImage.height, 4, 1, inputeFile);
+		fread(bmpImage.end, 4, 7, inputeFile);
+		
+ return bmpImage; /*image[i]*/
 }
 
-void fileRead(bmp bmpImage, file* outputFile, int captchaWeight, int captchaSize, BYTE ***rastrCaptcha, BYTE padArray[][20], int *padding)  
-{
-  fwrite(&bmpImage[0].type, 2, 1, outputFile);   /*проверить*/
-	 fwrite(&bmpImage[0].size, 4, 1, outputFile);
-	 fwrite(&bmpImage[0].reserved, 4, 1, outputFile);
-	 fwrite(&bmpImage[0].head_end, 4, 1, outputFile);
-	 fwrite(&bmpImage[0].header_size, 4, 1, outputFile);
+void fileWrite (bmp bmpImage, int captchaSize, BYTE ***rastrCaptcha, BYTE padArray[][20], int *padding)  +
+{	
+
+	/*записывает результат в результирующий файл*/
+	
+	 FILE* outputFile = fopen("captcha.bmp","w");
+	 
+  	 fwrite(&bmpImage.type, 2, 1, outputFile);   
+	 fwrite(&bmpImage.size, 4, 1, outputFile);
+	 fwrite(&bmpImage.reserved, 4, 1, outputFile);
+	 fwrite(&bmpImage.head_end, 4, 1, outputFile);
+	 fwrite(&bmpImage.header_size, 4, 1, outputFile);
 	 fwrite(&captchaWeight, 4, 1, outputFile);
-	 fwrite(&bmpImage[0].height, 4, 1, outputFile);
-	 fwrite(&image[0].end, 4, 7, outputFile);
-	 for(i=0;i<image[0].height; i++)
+	 fwrite(&bmpImage.height, 4, 1, outputFile);
+	 fwrite(&image.end, 4, 7, outputFile);
+	 for(i=0;i<bmpImage.height; i++)
 	   {
-		    for (j=0;j<image[0].weight*captchaSize; j++)
+		    for (j=0;j<bmpImage.weight*captchaSize; j++)
 		    fwrite(rastrCaptcha[i][j], 3, 1, outputFile);
 		    fwrite(padArray[0], padding[0], 1, outputFile);
 	   }
+	   
+	 fclose(outputFile);
 }
 
 
