@@ -41,8 +41,8 @@ int main()
 		memset(file_name,0,sizeof(file_name));
 	}
 
-	// int (*padding)=malloc(sizeof(int)*captchasize);
-	// BYTE pad_array[captchasize][20];
+	 int (*padding)=malloc(sizeof(int)*captchasize);
+	 BYTE pad_array[captchasize][20];
 	 BYTE ***rastr_captcha=(BYTE***)malloc(image[0].height*sizeof(BYTE**));
 
 	for(i=0;i<image[0].height;i++)
@@ -62,7 +62,7 @@ int main()
 		for(i=0;i<image[0].height;i++)
 		{
 			rastr[i]=(BYTE**)malloc(image[0].weight*sizeof(BYTE*));
-			for(z=j;j<image[0].weight;j++)
+			for(j=0;j<image[0].weight;j++)
 			{
 				rastr[i][j]=(BYTE*)malloc(3*sizeof(BYTE));
 			}
