@@ -19,7 +19,7 @@ int main()
 	char file_name[6];
 	char captcha[30];
 
-	file_name[5]='\0';
+	file_name[5]='\0'; //возможно не надо
 
 	printf("Enter the captcha:");
 	scanf("%s",captcha);
@@ -42,7 +42,8 @@ int main()
 	}
 
 	 int (*padding)=malloc(sizeof(int)*captchasize);
-	 BYTE pad_array[captchasize][20];
+	 BYTE pad_array[captchasize][20]; //проверить
+	
 	 BYTE ***rastr_captcha=(BYTE***)malloc(image[0].height*sizeof(BYTE**));
 
 	for(i=0;i<image[0].height;i++)
@@ -67,7 +68,9 @@ int main()
 				rastr[i][j]=(BYTE*)malloc(3*sizeof(BYTE));
 			}
 		}
+		
 		padding[number] = (image[0].size - image[0].head_end - image[0].height*image[number].weight * 3) / image[number].height;
+		
 		for(i=0;i<image[0].height;i++)
 		{
 			for(j=0;j<image[number].weight;j++)
@@ -87,7 +90,9 @@ int main()
 				}
 			}
 		}
+		
 		weight_captcha+=image[0].weight;
+		
 		for(i=0;i<image[0].height;i++)
 		{
 			for(j=0;j<image[0].weight;j++)
@@ -100,7 +105,7 @@ int main()
 	}
 
 	FILE * file_output = fopen("captcha.bmp","w");
-	/* 
+	
 	fwrite(&image[0].type, 2, 1, file_output);
 	fwrite(&image[0].size, 4, 1, file_output);
 	fwrite(&image[0].reserved, 4, 1, file_output);
@@ -111,12 +116,23 @@ int main()
 	fwrite(image[0].end, 4, 7, file_output);
 	for(i=0;i<image[0].height; i++)
 	{
-		for (j=0;j<image[0].weight*captchasize; j++)
+		for (j=0;j<weight_captcha; j++)
 		fwrite(rastr_captcha[i][j], 3, 1, file_output);
 		fwrite(pad_array[0], padding[0], 1, file_output);
 	}
-	*/
+	
 	free(padding);
+	
+	for(i=0; i<image[0].height; i++)
+	{
+		for(j=0; j<weight_captcha; j++)	
+		{
+			free(rastr_captcha[i][j]);
+		}
+		free(rastr_captcha[i]);
+	}
+	free(rastr_captcha[i][j]);
+	
 	fclose(file_output);
 	return 0;
 }
